@@ -17,9 +17,8 @@ The final topology includes:
 - passive-interface advertisement
 - deliberate break/fix scenarios
 
-![Final OSPF Topology](topology/ospf-topology.png)
-
 ## Topology and Addressing
+![OSPF Multi-Area Topology](topology/ospf-topology.png)
 
 | Router | Interface | Address | Role |
 |---|---|---:|---|
