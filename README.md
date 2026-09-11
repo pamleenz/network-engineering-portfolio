@@ -11,7 +11,7 @@ The portfolio is structured around engineering validation rather than isolated c
 | Domain | Module | Status | Highlights |
 |---|---|---|---|
 | Routing | [Multi-Area OSPF Engineering Lab](routing/ospf/) | Completed | Multi-area OSPF, ABR/ASBR, Totally NSSA, Type 7→5 translation, E1/E2 redistribution, summarization, authentication, passive interfaces, fault injection and recovery |
-| Routing | BGP | Planned | eBGP/iBGP, route policy, path selection, communities, filtering, failure handling |
+| Routing | [Cisco BGP Job-Ready Lab](routing/bgp/) | Completed | eBGP/iBGP, route reflection, best-path selection, prefix filtering, route-maps, communities, maximum-prefix, aggregation, dual-upstream traffic engineering, route-leak protection, RTBH, RIB/CEF troubleshooting and failure recovery |
 | Switching | Enterprise Switching | Planned | VLANs, trunks, STP, LACP, SVIs, redundancy, campus troubleshooting |
 | Security | Fortinet / Firewall | Planned | Policies, NAT, VPN, HA, SD-WAN, logging and session troubleshooting |
 | WAN / VPN | Enterprise WAN | Planned | IPsec, GRE, DMVPN, dual-ISP and WAN failover scenarios |
