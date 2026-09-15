@@ -17,37 +17,32 @@ Production-oriented Cisco campus / managed-LAN lab built in Cisco CML using IOS-
 
 ## Topology
 
+## Topology
+
 ```text
-                     +----------------------+
-                     |        DSW1          |
-                     |  L3 / HSRP / STP     |
-                     +----------+-----------+
-                                ||
-                                ||  Po1 / LACP
-                                ||
-                     +----------+-----------+
-                     |        DSW2          |
-                     |  L3 / HSRP / STP     |
-                     +----------+-----------+
-
-                         Distribution Pair
-
-                 DSW1 E0/2           DSW2 E0/2
-                     |                   |
-                     | 802.1Q trunk      | 802.1Q trunk
-                     |                   |
-                     +---------+---------+
-                               |
-                           +---+---+
-                           | ASW1  |
-                           +---+---+
-                               |
-                  +------------+------------+
-                  |                         |
-              ASW1 E0/2                 ASW1 E0/3
-               VLAN 10                   VLAN 40
-                  |                         |
-               CLIENT                     SRV1
+              +----------------------+      +----------------------+
+              |        DSW1          |      |        DSW2          |
+              |  L3 / HSRP / STP     |      |  L3 / HSRP / STP     |
+              +----------+-----------+      +-----------+----------+
+                         |                              |
+                         |<------ Po1 / LACP ---------->|
+                         |                              |
+                  DSW1 E0/2                       DSW2 E0/2
+                         |                              |
+                  802.1Q trunk                  802.1Q trunk
+                         |                              |
+                         +-------------+----------------+
+                                       |
+                                   +---+---+
+                                   | ASW1  |
+                                   +---+---+
+                                       |
+                          +------------+------------+
+                          |                         |
+                      ASW1 E0/2                 ASW1 E0/3
+                       VLAN 10                   VLAN 40
+                          |                         |
+                       CLIENT                     SRV1
 ```
 
 ### Physical Links
