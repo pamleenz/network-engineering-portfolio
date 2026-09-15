@@ -17,8 +17,6 @@ Production-oriented Cisco campus / managed-LAN lab built in Cisco CML using IOS-
 
 ## Topology
 
-## Topology
-
 ```text
               +----------------------+      +----------------------+
               |        DSW1          |      |        DSW2          |
