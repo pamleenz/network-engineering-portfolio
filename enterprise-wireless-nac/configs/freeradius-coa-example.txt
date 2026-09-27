@@ -1,0 +1,10 @@
+# Sent from RADIUS1 to CORP-AP DAS listener on UDP/3799
+cat <<'EOF' | radclient -x 10.10.99.10:3799 disconnect CorpAPDas2026
+User-Name = "restricted-client"
+Calling-Station-Id = "AA-64-70-00-00-00"
+NAS-IP-Address = 10.10.99.10
+EOF
+
+# Observed result:
+# Received Disconnect-ACK
+# Client session was removed and then automatically reauthenticated.

@@ -1,0 +1,24 @@
+# Managed corporate device - EAP-TLS authorization
+corp-client
+    Tunnel-Type = VLAN,
+    Tunnel-Medium-Type = IEEE-802,
+    Tunnel-Private-Group-Id = "10"
+
+# Restricted / unmanaged endpoint
+restricted-client
+    Tunnel-Type = VLAN,
+    Tunnel-Medium-Type = IEEE-802,
+    Tunnel-Private-Group-Id = "20"
+
+# Known IoT printer - MAB simulation
+5254008a06ba Cleartext-Password := "5254008a06ba"
+    Tunnel-Type = VLAN,
+    Tunnel-Medium-Type = IEEE-802,
+    Tunnel-Private-Group-Id = "30"
+
+# Lab-only fallback for an unknown Ethernet/MAB endpoint.
+# DO NOT copy this as a production security policy.
+DEFAULT NAS-Port-Type == Ethernet, Auth-Type := Accept
+    Tunnel-Type = VLAN,
+    Tunnel-Medium-Type = IEEE-802,
+    Tunnel-Private-Group-Id = "20"

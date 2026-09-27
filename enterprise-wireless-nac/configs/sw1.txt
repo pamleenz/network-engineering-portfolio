@@ -1,0 +1,54 @@
+! Enterprise Wireless & NAC - relevant SW1 configuration
+vlan 10
+ name CORP-WLAN
+vlan 20
+ name NAC-RESTRICTED
+vlan 30
+ name IOT-DEVICES
+vlan 40
+ name GUEST-WIFI
+vlan 99
+ name INFRA-RADIUS
+!
+interface Ethernet0/0
+ description TO-CORP-AP
+ switchport trunk native vlan 10
+ switchport trunk allowed vlan 10,20,30,40,99
+ switchport mode trunk
+!
+interface Ethernet0/1
+ description TO-RADIUS1
+ switchport mode access
+ switchport access vlan 99
+!
+interface Vlan10
+ description CORP-WLAN-GATEWAY
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+interface Vlan20
+ description NAC-RESTRICTED-GATEWAY
+ ip address 10.10.20.1 255.255.255.0
+ no shutdown
+interface Vlan30
+ description IOT-DEVICES-GATEWAY
+ ip address 10.10.30.1 255.255.255.0
+ no shutdown
+interface Vlan40
+ description GUEST-WIFI-GATEWAY
+ ip address 10.10.40.1 255.255.255.0
+ ip access-group GUEST-IN in
+ no shutdown
+interface Vlan99
+ description INFRA-RADIUS-GATEWAY
+ ip address 10.10.99.1 255.255.255.0
+ no shutdown
+!
+ip access-list extended GUEST-IN
+ deny ip 10.10.40.0 0.0.0.255 10.10.10.0 0.0.0.255
+ deny ip 10.10.40.0 0.0.0.255 10.10.20.0 0.0.0.255
+ deny ip 10.10.40.0 0.0.0.255 10.10.30.0 0.0.0.255
+ deny ip 10.10.40.0 0.0.0.255 10.10.99.0 0.0.0.255
+ permit ip 10.10.40.0 0.0.0.255 any
+!
+! IOL-L2 limitation observed in this lab:
+! mab / dot1x / access-session commands were unavailable on Ethernet0/2.
