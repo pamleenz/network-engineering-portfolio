@@ -1,0 +1,73 @@
+# Fortinet ADVPN 2.0 + SD-WAN reference skeleton
+# Multi-node behavior was not functionally validated in the lab because additional VMs were unlicensed.
+
+config system interface
+    edit "BGP-Lo"
+        set type loopback
+        set ip 10.255.255.2 255.255.255.255
+        set allowaccess ping
+    next
+end
+
+config system settings
+    set location-id 10.255.255.2
+end
+
+config vpn ipsec phase1-interface
+    edit "H1-INET"
+        set interface "wan1"
+        set ike-version 2
+        set peertype any
+        set net-device enable
+        set add-route disable
+        set proposal aes256gcm-prfsha384
+        set dpd on-idle
+        set remote-gw <HUB-INTERNET-IP>
+        set auto-discovery-receiver enable
+        set network-overlay enable
+        set network-id 11
+        set encapsulation vpn-id-ipip
+        set exchange-ip-addr4 10.255.255.2
+        set psksecret <SECRET-OR-CERT-AUTH>
+    next
+end
+
+config vpn ipsec phase2-interface
+    edit "H1-INET"
+        set phase1name "H1-INET"
+        set proposal aes256gcm
+    next
+end
+
+config system sdwan
+    set status enable
+    config zone
+        edit "overlay"
+            set advpn-select enable
+            set advpn-health-check "HUB-HC"
+        next
+    end
+    config members
+        edit 10
+            set interface "H1-INET"
+            set zone "overlay"
+            set transport-group 1
+        next
+    end
+    config health-check
+        edit "HUB-HC"
+            set server "10.255.254.1"
+            set members 10
+            config sla
+                edit 1
+                    set latency-threshold 80
+                    set jitter-threshold 30
+                    set packetloss-threshold 5
+                next
+            end
+        next
+    end
+end
+
+# Hub parent overlay uses type dynamic + auto-discovery-sender enable.
+# Production deployment should use current Fortinet design guidance and approved crypto/authentication.
