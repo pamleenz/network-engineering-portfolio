@@ -1,0 +1,46 @@
+---
+- name: Data-driven BGP change
+  hosts: cisco_routers
+  gather_facts: false
+
+  vars_files:
+    - ../data/changes/CHG-M09-001.yml
+    - ../data/devices.yml
+
+  vars:
+    device: "{{ devices[inventory_hostname] }}"
+    prefix: "{{ change.objective.advertise_prefix }}"
+    prefix_address: "{{ change.objective.advertise_prefix.split('/')[0] }}"
+
+  pre_tasks:
+    - name: Validate change intent
+      ansible.builtin.command:
+        cmd: python scripts/validate_change.py
+        chdir: "{{ playbook_dir }}/.."
+      delegate_to: localhost
+      run_once: true
+      changed_when: false
+      check_mode: false
+
+  tasks:
+    - name: Configure advertised static route
+      cisco.ios.ios_static_routes:
+        config:
+          - address_families:
+              - afi: ipv4
+                routes:
+                  - dest: "{{ prefix }}"
+                    next_hops:
+                      - interface: Null0
+        state: merged
+
+    - name: Configure BGP
+      cisco.ios.ios_bgp_global:
+        config:
+          as_number: "{{ device.local_as }}"
+          neighbors:
+            - neighbor_address: "{{ device.peer_ip }}"
+              remote_as: "{{ device.remote_as }}"
+          networks:
+            - address: "{{ prefix_address }}"
+        state: merged

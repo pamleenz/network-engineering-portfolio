@@ -1,0 +1,30 @@
+---
+- name: BGP change post-check
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Verify BGP session
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp neighbors 192.0.2.1
+        wait_for:
+          - result[0] contains "BGP state = Established"
+
+    - name: Verify advertised prefix exists
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp 203.0.113.0
+        wait_for:
+          - result[0] contains "valid, sourced, local, best"
+
+    - name: Verify prefix is advertised to ISP1
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp neighbors 192.0.2.1 advertised-routes
+        wait_for:
+          - result[0] contains "203.0.113.0"
+
+    - name: Post-check passed
+      ansible.builtin.debug:
+        msg: "CHG-M09-001 POST-CHECK PASSED"

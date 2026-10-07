@@ -1,0 +1,18 @@
+---
+- name: Apply BGP advertisement change
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Install route for advertised prefix
+      cisco.ios.ios_config:
+        lines:
+          - ip route 203.0.113.0 255.255.255.0 Null0
+
+    - name: Configure BGP
+      cisco.ios.ios_config:
+        parents:
+          - router bgp 65010
+        lines:
+          - neighbor 192.0.2.1 remote-as 65001
+          - network 203.0.113.0 mask 255.255.255.0

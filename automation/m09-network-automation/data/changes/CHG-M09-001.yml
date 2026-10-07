@@ -1,0 +1,26 @@
+change:
+  id: CHG-M09-001
+
+  service:
+    name: managed-internet
+    type: bgp-prefix-advertisement
+
+  objective:
+    advertise_prefix: 203.0.113.0/24
+
+  targets:
+    devices:
+      - CE-AKL-01
+      - CE-AKL-02
+
+    upstreams:
+      - ISP1
+      - ISP2
+
+  expected_state:
+    bgp_sessions: established
+    prefix_advertised: true
+    unexpected_prefixes: 0
+
+  rollback:
+    remove_prefix_from_export_policy: true

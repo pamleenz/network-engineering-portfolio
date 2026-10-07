@@ -1,0 +1,5 @@
+ip route {{ prefix }} {{ netmask }} Null0
+
+router bgp {{ local_as }}
+ neighbor {{ peer_ip }} remote-as {{ remote_as }}
+ network {{ prefix }} mask {{ netmask }}
