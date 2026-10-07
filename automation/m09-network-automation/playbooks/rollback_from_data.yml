@@ -1,0 +1,24 @@
+---
+- name: Data-driven BGP rollback
+  hosts: cisco_routers
+  gather_facts: false
+
+  vars_files:
+    - ../data/changes/CHG-M09-001.yml
+    - ../data/devices.yml
+
+  vars:
+    device: "{{ devices[inventory_hostname] }}"
+    prefix: "{{ change.objective.advertise_prefix.split('/')[0] }}"
+    netmask: "{{ change.objective.advertise_prefix | ansible.utils.ipaddr('netmask') }}"
+
+  tasks:
+    - name: Remove BGP process
+      cisco.ios.ios_config:
+        lines:
+          - "no router bgp {{ device.local_as }}"
+
+    - name: Remove advertised prefix route
+      cisco.ios.ios_config:
+        lines:
+          - "no ip route {{ prefix }} {{ netmask }} Null0"

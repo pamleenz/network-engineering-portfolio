@@ -1,0 +1,12 @@
+---
+- name: Backup before BGP change
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Backup running configuration
+      cisco.ios.ios_config:
+        backup: true
+        backup_options:
+          dir_path: backups/CHG-M09-001
+          filename: "{{ inventory_hostname }}-prechange.cfg"

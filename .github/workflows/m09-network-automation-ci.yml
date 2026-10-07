@@ -1,0 +1,56 @@
+---
+name: M09 Network Automation CI
+
+on:
+  push:
+    paths:
+      - "automation/m09-network-automation/**"
+      - ".github/workflows/m09-network-automation-ci.yml"
+
+  pull_request:
+    paths:
+      - "automation/m09-network-automation/**"
+      - ".github/workflows/m09-network-automation-ci.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: automation/m09-network-automation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r collections/requirements.yml
+
+      - name: Check Python syntax
+        run: python -m py_compile scripts/*.py
+
+      - name: Validate change intent
+        run: python scripts/validate_change.py
+
+      - name: Check Ansible playbook syntax
+        run: |
+          for playbook in playbooks/*.yml; do
+            echo "Checking $playbook"
+            ansible-playbook -i ci/inventory.yml --syntax-check "$playbook"
+          done
+
+      - name: Ensure .env is not tracked
+        run: |
+          if git ls-files | grep -qE '(^|/)\.env$'; then
+            echo ".env must not be committed"
+            exit 1
+          fi

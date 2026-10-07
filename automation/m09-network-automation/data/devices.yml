@@ -1,0 +1,10 @@
+devices:
+  CE-AKL-01:
+    local_as: 65010
+    peer_ip: 192.0.2.1
+    remote_as: 65001
+
+  CE-AKL-02:
+    local_as: 65010
+    peer_ip: 198.51.100.1
+    remote_as: 65002

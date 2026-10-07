@@ -1,0 +1,30 @@
+---
+- name: Verify BGP rollback
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Verify BGP is no longer active
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp summary
+        wait_for:
+          - result[0] contains "% BGP not active"
+
+    - name: Verify advertised prefix is removed
+      cisco.ios.ios_command:
+        commands:
+          - show ip route 203.0.113.0
+        wait_for:
+          - result[0] contains "% Network not in table"
+
+    - name: Verify BGP configuration is removed
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | section router bgp
+        wait_for:
+          - result[0] not contains "router bgp 65010"
+
+    - name: Rollback verification passed
+      ansible.builtin.debug:
+        msg: "CHG-M09-001 ROLLBACK VERIFIED"

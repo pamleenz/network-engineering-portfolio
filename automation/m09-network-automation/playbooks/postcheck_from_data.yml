@@ -1,0 +1,38 @@
+---
+- name: Data-driven BGP post-check
+  hosts: cisco_routers
+  gather_facts: false
+
+  vars_files:
+    - ../data/changes/CHG-M09-001.yml
+    - ../data/devices.yml
+
+  vars:
+    peer_ip: "{{ devices[inventory_hostname].peer_ip }}"
+    prefix: "{{ change.objective.advertise_prefix.split('/')[0] }}"
+
+  tasks:
+    - name: Verify BGP session
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp neighbors {{ peer_ip }}"
+        wait_for:
+          - result[0] contains "BGP state = Established"
+
+    - name: Verify BGP prefix
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp {{ prefix }}"
+        wait_for:
+          - result[0] contains "valid, sourced, local, best"
+
+    - name: Verify prefix advertised
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp neighbors {{ peer_ip }} advertised-routes"
+        wait_for:
+          - "result[0] contains '{{ prefix }}'"
+
+    - name: Post-check passed
+      ansible.builtin.debug:
+        msg: "{{ change.id }} POST-CHECK PASSED"

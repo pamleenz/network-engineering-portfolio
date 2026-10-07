@@ -1,0 +1,18 @@
+---
+- name: Roll back BGP advertisement change
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Remove BGP advertisement
+      cisco.ios.ios_config:
+        parents:
+          - router bgp 65010
+        lines:
+          - no network 203.0.113.0 mask 255.255.255.0
+          - no neighbor 192.0.2.1 remote-as 65001
+
+    - name: Remove static route
+      cisco.ios.ios_config:
+        lines:
+          - no ip route 203.0.113.0 255.255.255.0 Null0
