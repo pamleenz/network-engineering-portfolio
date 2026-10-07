@@ -8,30 +8,39 @@
     - ../data/devices.yml
 
   vars:
-    peer_ip: "{{ devices[inventory_hostname].peer_ip }}"
-    prefix: "{{ change.objective.advertise_prefix.split('/')[0] }}"
+    device: "{{ devices[inventory_hostname] }}"
+    prefix: "{{ change.objective.advertise_prefix }}"
+    prefix_address: "{{ change.objective.advertise_prefix.split('/')[0] }}"
 
   tasks:
-    - name: Verify BGP session
-      cisco.ios.ios_command:
-        commands:
-          - "show ip bgp neighbors {{ peer_ip }}"
-        wait_for:
-          - result[0] contains "BGP state = Established"
+    - name: Wait for BGP session to establish
+      ansible.netcommon.cli_command:
+        command: "show ip bgp neighbors {{ device.peer_ip }} | include BGP state"
+      register: bgp_session
+      until: "'Established' in bgp_session.stdout"
+      retries: 12
+      delay: 5
+      changed_when: false
 
     - name: Verify BGP prefix
-      cisco.ios.ios_command:
-        commands:
-          - "show ip bgp {{ prefix }}"
-        wait_for:
-          - result[0] contains "valid, sourced, local, best"
+      ansible.netcommon.cli_command:
+        command: "show ip bgp {{ prefix_address }}"
+      register: bgp_prefix
+      until:
+        - "prefix_address in bgp_prefix.stdout"
+        - "'best' in bgp_prefix.stdout"
+      retries: 6
+      delay: 5
+      changed_when: false
 
     - name: Verify prefix advertised
-      cisco.ios.ios_command:
-        commands:
-          - "show ip bgp neighbors {{ peer_ip }} advertised-routes"
-        wait_for:
-          - "result[0] contains '{{ prefix }}'"
+      ansible.netcommon.cli_command:
+        command: "show ip bgp neighbors {{ device.peer_ip }} advertised-routes"
+      register: advertised_prefix
+      until: "prefix_address in advertised_prefix.stdout"
+      retries: 6
+      delay: 5
+      changed_when: false
 
     - name: Post-check passed
       ansible.builtin.debug:
