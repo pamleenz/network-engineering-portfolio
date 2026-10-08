@@ -34,13 +34,24 @@
                       - interface: Null0
         state: merged
 
-    - name: Configure BGP
+    - name: Configure BGP global settings
       cisco.ios.ios_bgp_global:
         config:
           as_number: "{{ device.local_as }}"
           neighbors:
             - neighbor_address: "{{ device.peer_ip }}"
               remote_as: "{{ device.remote_as }}"
-          networks:
-            - address: "{{ prefix_address }}"
+        state: merged
+
+    - name: Configure BGP IPv4 address family
+      cisco.ios.ios_bgp_address_family:
+        config:
+          as_number: "{{ device.local_as }}"
+          address_family:
+            - afi: ipv4
+              neighbors:
+                - neighbor_address: "{{ device.peer_ip }}"
+                  activate: true
+              networks:
+                - address: "{{ prefix_address }}"
         state: merged
