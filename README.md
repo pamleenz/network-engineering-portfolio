@@ -21,8 +21,8 @@ The overall goal is job readiness for Network Engineer, Senior Network Engineer,
 | Data Centre | [VXLAN EVPN / Nexus Operations & Failure Engineering](data-centre/module-07-data-centre-networking/) | Completed | Spine-leaf underlay, BGP EVPN, VXLAN, L2VNI/L3VNI, symmetric IRB, Type-2/3/5 routes, Border Leaf, DCI concepts, MTU/RT failure engineering and NX-OS mapping |
 | Cloud / Hybrid | [M08 - Cloud & Hybrid Networking](cloud-hybrid-networking/) | Completed | Azure hub-spoke, S2S IPsec, BGP, gateway transit, NSG/UDR, Private Endpoint/DNS concepts, AWS VPN/TGW/Direct Connect architecture, hybrid troubleshooting |
 | Automation | [M09 - Automation & Source of Truth](automation/m09-network-automation/) | Completed | Git-based change control, YAML intent, Python validation, Jinja2, Ansible resource modules, Vault, NetBox dynamic inventory, REST API, pre/post-check, rollback and GitHub Actions CI |
-| Operations | M11 - Managed Services & Observability | Current | SNMP, Syslog, NetFlow/IPFIX, NMS, alert triage, service baselines, SLA/SLO thinking, configuration backup, capacity, incident, escalation and RCA workflows |
-| Multi-Vendor | M10 - Multi-Vendor Operations & Migration | Planned | Junos operational migration from Cisco, PAN-OS operational model, Check Point management/policy workflow, F5 BIG-IP fundamentals, Arista EOS mapping, cross-vendor troubleshooting and migration |
+| Operations | [M11 - Managed Services & Observability](operations/m11-managed-services-observability/) | Completed | SNMP, Syslog, NetFlow/IPFIX, NMS, alert triage, service baselines, SLA/SLO thinking, configuration backup, capacity, incident, escalation and RCA workflows |
+| Multi-Vendor | M10 - Multi-Vendor Operations & Migration | Current | Junos operational migration from Cisco, PAN-OS operational model, Check Point management/policy workflow, F5 BIG-IP fundamentals, Arista EOS mapping, cross-vendor troubleshooting and migration |
 | Capstone | M12 - Integrated Managed Services Capstone | Planned | Service acceptance, production change, multi-vendor major incident, vendor/carrier escalation, RCA/PIR, automation/observability integration and final handover |
 
 ## Engineering Approach
@@ -59,6 +59,12 @@ The remaining roadmap adds Juniper Junos, Palo Alto PAN-OS, Check Point, F5 BIG-
 
 ## Featured Projects
 
+### M11 - Managed Services & Observability
+
+A production-style observability module combining LibreNMS, SNMPv3 polling/traps, Syslog, NTP, NetFlow v9, alert lifecycle, noise reduction, SLA measurement caveats and an end-to-end managed-services incident/RCA.
+
+→ [Open the M11 observability lab](operations/m11-managed-services-observability/)
+
 ### M09 - Automation & Source of Truth
 
 A production-oriented automation workflow for a controlled BGP prefix advertisement change using NetBox dynamic inventory, Ansible Vault, Cisco resource modules, validation, pre-check/backup/change/post-check/rollback and GitHub Actions CI.
@@ -93,9 +99,9 @@ Hybrid networking work covering Azure hands-on VPN/BGP connectivity and AWS arch
 
 The remaining modules are intentionally focused on operational gaps rather than repeating protocol theory already demonstrated elsewhere in this repository.
 
-### M11 — Managed Services & Observability
+### M11 — Managed Services & Observability ✅
 
-Build the operational evidence layer used by enterprise and MSP teams:
+Completed production-style observability work covering:
 
 - SNMP polling and traps
 - Syslog and event correlation
@@ -106,7 +112,7 @@ Build the operational evidence layer used by enterprise and MSP teams:
 - configuration backup and operational hygiene
 - incident, escalation and RCA workflow
 
-### M10 — Multi-Vendor Operations & Migration
+### M10 — Multi-Vendor Operations & Migration (Current)
 
 Convert existing Cisco/Fortinet knowledge into practical cross-vendor operational competency:
 
@@ -152,11 +158,13 @@ network-engineering-portfolio/
 ├── data-centre/
 │   └── module-07-data-centre-networking/
 ├── cloud-hybrid-networking/
-└── automation/
-    └── m09-network-automation/
+├── automation/
+│   └── m09-network-automation/
+└── operations/
+    └── m11-managed-services-observability/
 ```
 
-Additional M11, M10 and M12 material will be added as those modules are completed.
+M11 is complete. M10 is now the active module, followed by the M12 integrated capstone.
 
 ## Security Note
 
