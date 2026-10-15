@@ -1,0 +1,23 @@
+---
+# This play must run before any multi-device change/rollback.
+# An inventory subset must never silently omit approved change targets.
+- name: Validate approved change scope against resolved inventory
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../data/changes/CHG-M09-001.yml
+    - ../data/devices.yml
+  vars:
+    approved_devices: "{{ change.targets.devices }}"
+    resolved_devices: "{{ groups['cisco_routers'] | default([]) }}"
+  tasks:
+    - name: Refuse missing or extra router targets
+      ansible.builtin.assert:
+        that:
+          - "(approved_devices | difference(resolved_devices) | length) == 0"
+          - "(resolved_devices | difference(approved_devices) | length) == 0"
+        fail_msg: >-
+          Inventory does not exactly match approved targets. Approved={{ approved_devices }},
+          resolved={{ resolved_devices }}. No devices should be modified until
+          all expected nodes exist in the selected inventory/NetBox source.
+        success_msg: "Approved device scope matches resolved inventory"
