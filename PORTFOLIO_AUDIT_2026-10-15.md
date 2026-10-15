@@ -40,3 +40,26 @@
 5. Where vendor evaluation environments become available, add true Junos/PAN-OS/BIG-IP/EOS test artifacts rather than rewriting design notes as observed outputs.
 
 **Audit outcome:** Portfolio content and indexing are coherent and suitable as an educational network-engineering portfolio, with the listed limitations. They should **not** be represented as a wholly lab-validated, production-ready multi-vendor network.
+
+## 2026-10-15 Remediation Addendum
+
+The later full-config pass reviewed **57 current configuration/YAML/shell/reference files** for obvious inline shared secrets and suspicious credential strings, plus all 14 module/root README files and their 44 internal relative Markdown links. No broken internal README links were found. This was a **static review**, not a penetration test or line-by-line vendor-device replay.
+
+### Direct GitHub changes completed
+
+- **M09 rollback blast radius:** Replaced the prior `no router bgp <AS>` whole-process deletion with scoped removal of a change-owned IPv4 BGP network statement and its Null0 route. Updated rollback verification to ensure the BGP AS remains configured. Historical pre-change ownership must still be proven before any live rollback.
+- **M09 prefix accuracy:** Added explicit BGP network mask to `ios_bgp_address_family` example, aligned rollback with the IPv4 address-family, and repaired Jinja2 output directory creation.
+- **M09 post-check:** Removed brittle fixed attribute-word-order checks. Added checks of route entry/best-path and advertisement with clear IOS-CLI-version limitations. These prove local control-plane assertions only, not remote acceptance or FIB/packet forwarding.
+- **M09 intent checks:** Refactored `scripts/validate_change.py` to reject default/multicast/too-specific prefix and undefined or duplicated targets. Added offline `unittest` cases and enabled them in GitHub Actions.
+- **M09 approved-target scope:** Added `validate_target_scope.yml` to both change and rollback workflows. The repository's static inventory lists only CE-AKL-01 although the sample change intends CE-AKL-01 and CE-AKL-02, so the live workflow now intentionally **fails closed** until the approved inventory is complete. CI syntax success does not run this gate against actual devices.
+- **Wireless/NAC secret hygiene:** Redacted literal RADIUS shared-secret/CoA-secret strings from `enterprise-wireless-nac/configs/hostapd-corp.conf`. The historical Git version still exists. If either old value was ever a real or reused credential, rotate it. No claim is made that Git history was erased.
+- **Documentation:** Updated M09 module README with explicit CI bounds, workflow safety conditions and inventory discrepancy. M10 and M12 technical documentation remains explicitly design/simulation-labelled where applicable.
+
+### Test evidence and unresolved runtime checks
+
+- The GitHub Actions runs invoked after these changes verify **Python offline unit tests, intent validation and Ansible playbook syntax**. Refer to the [M09 Actions history](../../actions/workflows/m09-network-automation-ci.yml) for exact commit-specific outcomes; never equate Success with an IOS/NetBox integration test.
+- The complete M09 BGP postcheck/rollback must still be validated on the target IOS/IOS-XE software release using known device output. It may need a model-driven or parsed-output check rather than CLI text grep.
+- Actual Check Point final Security Policy after diagnostic-rule cleanup, external application tests, Palo Alto/Juniper/F5/Arista VM tests, HA/failover and M12 final independent scenario scoring cannot be completed from the GitHub repository.
+- Historical credentials in older Git commits and encrypted Vault contents cannot be declared secure solely by inspecting current text. Confirm old secrets are test-only or rotate them, and keep new secrets external to this public repository.
+
+**Post-remediation disposition:** Documentation coverage, internal README links and identified high-impact static workflow issues are corrected. **Production functional verification and final M12 individual assessment remain pending.**
