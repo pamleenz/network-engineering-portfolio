@@ -57,7 +57,7 @@ The later full-config pass reviewed **57 current configuration/YAML/shell/refere
 
 ### Test evidence and unresolved runtime checks
 
-- The GitHub Actions runs invoked after these changes verify **Python offline unit tests, intent validation and Ansible playbook syntax**. Refer to the [M09 Actions history](../../actions/workflows/m09-network-automation-ci.yml) for exact commit-specific outcomes; never equate Success with an IOS/NetBox integration test.
+- The GitHub Actions runs invoked after these changes verify **Python offline unit tests, intent validation and Ansible playbook syntax**. Refer to the [M09 Actions history](https://github.com/pamleenz/network-engineering-portfolio/actions/workflows/m09-network-automation-ci.yml) for exact commit-specific outcomes; never equate Success with an IOS/NetBox integration test.
 - The complete M09 BGP postcheck/rollback must still be validated on the target IOS/IOS-XE software release using known device output. It may need a model-driven or parsed-output check rather than CLI text grep.
 - Actual Check Point final Security Policy after diagnostic-rule cleanup, external application tests, Palo Alto/Juniper/F5/Arista VM tests, HA/failover and M12 final independent scenario scoring cannot be completed from the GitHub repository.
 - Historical credentials in older Git commits and encrypted Vault contents cannot be declared secure solely by inspecting current text. Confirm old secrets are test-only or rotate them, and keep new secrets external to this public repository.
