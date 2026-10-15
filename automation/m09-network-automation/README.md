@@ -53,7 +53,7 @@ The normal execution entry point is `playbooks/change_workflow.yml`. The explici
 - **NetBox** - source of truth for device identity, management IP, site, role and platform.
 - **Dynamic inventory** - Ansible queries NetBox instead of relying on a manually maintained host list.
 - **Change YAML** - represents business/change intent separately from execution logic.
-- **Python validation** - validates the change request and policy before configuration is attempted.
+- **Python validation and unit tests** - check prefix scope and defined target devices before network configuration is attempted.
 - **Jinja2** - retained as a configuration-rendering example; the main configuration path uses structured Cisco resource modules for better idempotency.
 - **Ansible** - orchestration and execution engine for pre-check, backup, change, post-check and rollback.
 - **Ansible Vault** - protects device credentials used by automation.
@@ -66,7 +66,7 @@ Structured Cisco resource modules are used for the active change path:
 
 - `cisco.ios.ios_static_routes` - Null0 route used to originate the prefix.
 - `cisco.ios.ios_bgp_global` - BGP AS and neighbor remote-AS.
-- `cisco.ios.ios_bgp_address_family` - IPv4 address-family activation and network advertisement.
+- `cisco.ios.ios_bgp_address_family` - IPv4 address-family activation and an **explicit exact prefix mask** for the network advertisement.
 
 This split is important on IOS-XE platforms where a neighbor may exist globally but still require explicit activation under the IPv4 address family.
 
@@ -95,7 +95,7 @@ The active configuration workflow uses Cisco resource modules rather than relyin
 
 ## CI Boundary
 
-The GitHub Actions workflow performs offline checks only. It does **not** connect to the lab router or NetBox.
+The GitHub Actions workflow performs **offline tests, Python lint/syntax checks, Ansible playbook syntax checks and intent validation only**. It does **not** connect to the lab router or NetBox. Passing CI cannot establish operational BGP route advertisement, upstream acceptance or actual service reachability.
 
 ```text
 Feature branch
@@ -112,6 +112,10 @@ The small `ci/inventory.yml` file exists only so Ansible syntax checks have a va
 A production deployment would normally place an execution controller such as AWX / Ansible Automation Platform or a self-hosted runner between an approved change and the network. This provides controlled credentials, RBAC, scheduling, approval gates and centralized execution logs.
 
 Terraform is complementary rather than a replacement for Ansible: it is commonly used to create and maintain API-driven infrastructure such as cloud VNets/VPCs, subnets, route tables and gateways, while Ansible remains well suited to device configuration and operational workflows.
+
+## Offline Tests
+
+`python -m unittest discover -s tests -v` verifies intent validation on valid and invalid prefix/device inputs. GitHub Actions runs the same suite. These are executable offline tests, not packet-forwarding or vendor CLI behaviour checks.
 
 ## Security
 
