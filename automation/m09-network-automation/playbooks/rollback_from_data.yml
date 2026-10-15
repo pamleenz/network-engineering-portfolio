@@ -1,24 +1,36 @@
 ---
-- name: Data-driven BGP rollback
+# Scoped rollback only. Does not delete the BGP process, peer, or unrelated routes.
+# Operator must confirm the target network statement and Null0 static were
+# introduced by CHG-M09-001; otherwise restore the recorded pre-change diff.
+- name: Scoped BGP advertisement rollback
   hosts: cisco_routers
   gather_facts: false
-
   vars_files:
     - ../data/changes/CHG-M09-001.yml
     - ../data/devices.yml
-
   vars:
     device: "{{ devices[inventory_hostname] }}"
-    prefix: "{{ change.objective.advertise_prefix.split('/')[0] }}"
-    netmask: "{{ change.objective.advertise_prefix | ansible.utils.ipaddr('netmask') }}"
-
+    prefix: "{{ change.objective.advertise_prefix }}"
+    prefix_address: "{{ prefix.split('/')[0] }}"
+    prefix_netmask: "{{ prefix | ansible.utils.ipaddr('netmask') }}"
   tasks:
-    - name: Remove BGP process
+    - name: Remove only the change-owned IPv4 BGP network statement
       cisco.ios.ios_config:
+        parents:
+          - "router bgp {{ device.local_as }}"
         lines:
-          - "no router bgp {{ device.local_as }}"
+          - "no network {{ prefix_address }} mask {{ prefix_netmask }}"
+      register: rollback_bgp
 
-    - name: Remove advertised prefix route
+    - name: Remove only the change-owned Null0 originating route
       cisco.ios.ios_config:
         lines:
-          - "no ip route {{ prefix }} {{ netmask }} Null0"
+          - "no ip route {{ prefix_address }} {{ prefix_netmask }} Null0"
+      register: rollback_route
+
+    - name: Show rollback results for audit
+      ansible.builtin.debug:
+        msg:
+          - "BGP network change: {{ rollback_bgp.changed }}"
+          - "Null0 route change: {{ rollback_route.changed }}"
+          - "BGP AS and neighbor configuration intentionally preserved"
