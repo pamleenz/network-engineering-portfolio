@@ -1,30 +1,22 @@
 ---
-- name: BGP change post-check
+# Legacy fixed-neighbor demonstration; production workflow uses postcheck_from_data.yml.
+- name: Validate advertised prefix from CLI output
   hosts: cisco_routers
   gather_facts: false
-
   tasks:
-    - name: Verify BGP session
+    - name: Read peer and BGP prefix evidence
       cisco.ios.ios_command:
         commands:
           - show ip bgp neighbors 192.0.2.1
-        wait_for:
-          - result[0] contains "BGP state = Established"
-
-    - name: Verify advertised prefix exists
-      cisco.ios.ios_command:
-        commands:
           - show ip bgp 203.0.113.0
-        wait_for:
-          - result[0] contains "valid, sourced, local, best"
-
-    - name: Verify prefix is advertised to ISP1
-      cisco.ios.ios_command:
-        commands:
           - show ip bgp neighbors 192.0.2.1 advertised-routes
-        wait_for:
-          - result[0] contains "203.0.113.0"
-
-    - name: Post-check passed
-      ansible.builtin.debug:
-        msg: "CHG-M09-001 POST-CHECK PASSED"
+      register: result
+      changed_when: false
+    - name: Check output without relying on brittle path-attribute word order
+      ansible.builtin.assert:
+        that:
+          - "'BGP state = Established' in result.stdout[0]"
+          - "'BGP routing table entry for 203.0.113.0/24' in result.stdout[1]"
+          - "'best #' in result.stdout[1]"
+          - "'203.0.113.0/24' in result.stdout[2]"
+        fail_msg: "Inspect BGP format and advertisement on this IOS release."
