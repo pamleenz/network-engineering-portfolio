@@ -79,7 +79,15 @@ Post-change validation checks:
 - The expected prefix is present in advertised routes.
 - Retry/delay logic allows time for control-plane convergence before declaring failure.
 
-Rollback validation checks that the BGP process/change-specific state and advertised prefix have been removed as expected.
+Rollback validation now checks that the **specific advertised prefix and change-owned Null0 route have been removed while the BGP process remains present**. It must not delete an entire production BGP process or peer. Before executing rollback, the operator must confirm that these specific entries were created by the change; if they pre-existed, restore the recorded pre-change diff instead of deleting them.
+
+### Evidence and compatibility limits
+
+- IOS/IOS-XE BGP CLI output differs by software version. The CLI `best #` and exact route-entry checks are compatibility-sensitive; run against the actual lab image before claiming operational verification.
+- The check for a prefix in `advertised-routes` demonstrates local **advertisement**, not remote acceptance or RIB/FIB installation.
+- The default active workflow uses an offline Python policy validator and a live network playbook; GitHub CI checks only syntax and validation policy.
+- `203.0.113.0/24` is an RFC 5737 documentation range. Public examples are never intended for Internet advertisement.
+- **Change ownership matters:** the workflow assumes prefix and Null0 route did not exist at pre-change. Production implementations must capture a precise baseline and rollback only objects introduced or altered by the approved change.
 
 ## Idempotency
 
