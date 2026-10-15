@@ -46,7 +46,7 @@ Failure or approved backout
   -> Rollback verification
 ```
 
-The normal execution entry point is `playbooks/change_workflow.yml`. The explicit backout path is `playbooks/rollback_workflow.yml`.
+The normal execution entry point is `playbooks/change_workflow.yml`. The explicit backout path is `playbooks/rollback_workflow.yml`. **Both now begin with `validate_target_scope.yml`, which fails closed unless the resolved inventory exactly matches the approved target list.**
 
 ## Main Components
 
@@ -105,7 +105,7 @@ Feature branch
    -> Merge to main
 ```
 
-The small `ci/inventory.yml` file exists only so Ansible syntax checks have a valid host group. It is not a production or deployment inventory.
+The small `ci/inventory.yml` file exists only so Ansible syntax checks have a valid host group. It is not a production or deployment inventory. **Important:** the checked-in static lab inventory currently contains only `CE-AKL-01`, whereas the example change lists `CE-AKL-01` and `CE-AKL-02`. The executable change workflow therefore intentionally refuses deployment with that incomplete inventory. Resolve both nodes in NetBox/inventory and validate access before running. CI syntax checking deliberately does not exercise this live inventory gate.
 
 ## Production Model
 
