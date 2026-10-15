@@ -2,46 +2,46 @@
 - name: Data-driven BGP post-check
   hosts: cisco_routers
   gather_facts: false
-
   vars_files:
     - ../data/changes/CHG-M09-001.yml
     - ../data/devices.yml
-
   vars:
     device: "{{ devices[inventory_hostname] }}"
     prefix: "{{ change.objective.advertise_prefix }}"
-    prefix_address: "{{ change.objective.advertise_prefix.split('/')[0] }}"
-
+    prefix_address: "{{ prefix.split('/')[0] }}"
   tasks:
-    - name: Wait for BGP session to establish
-      ansible.netcommon.cli_command:
-        command: "show ip bgp neighbors {{ device.peer_ip }} | include BGP state"
-      register: bgp_session
-      until: "'Established' in bgp_session.stdout"
+    - name: Wait for BGP peer Established
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp neighbors {{ device.peer_ip }} | include BGP state"
+      register: peer
+      until: "'Established' in peer.stdout[0]"
       retries: 12
       delay: 5
       changed_when: false
 
-    - name: Verify BGP prefix
-      ansible.netcommon.cli_command:
-        command: "show ip bgp {{ prefix_address }}"
+    - name: Wait for locally originated exact BGP prefix
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp {{ prefix_address }}"
       register: bgp_prefix
       until:
-        - "prefix_address in bgp_prefix.stdout"
-        - "'best' in bgp_prefix.stdout"
+        - "'BGP routing table entry for ' ~ prefix in bgp_prefix.stdout[0]"
+        - "'best #' in bgp_prefix.stdout[0]"
       retries: 6
       delay: 5
       changed_when: false
 
-    - name: Verify prefix advertised
-      ansible.netcommon.cli_command:
-        command: "show ip bgp neighbors {{ device.peer_ip }} advertised-routes"
-      register: advertised_prefix
-      until: "prefix_address in advertised_prefix.stdout"
+    - name: Wait until expected prefix appears in advertisement to peer
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp neighbors {{ device.peer_ip }} advertised-routes"
+      register: advertised
+      until: "prefix in advertised.stdout[0]"
       retries: 6
       delay: 5
       changed_when: false
 
-    - name: Post-check passed
+    - name: Record result and scope of observation
       ansible.builtin.debug:
-        msg: "{{ change.id }} POST-CHECK PASSED"
+        msg: "{{ change.id }} BGP control-plane CLI assertions passed on {{ inventory_hostname }}. This does not prove the upstream installed the route or that customer traffic forwards."
