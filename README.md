@@ -88,6 +88,10 @@ network-engineering-portfolio/
     └── m12-integrated-ms-capstone/
 ```
 
+## Portfolio Audit
+
+[2026-10-15 repository content and evidence audit](PORTFOLIO_AUDIT_2026-10-15.md) documents verified directory coverage, known platform limitations, CI versus live-device boundaries, and prioritized follow-up checks. This review is not a line-by-line verification of all device configurations.
+
 ## Current Completion and Validation
 
 - **M01–M11:** Learning exercises documented, with platform-specific evidence and exclusions in each module.
