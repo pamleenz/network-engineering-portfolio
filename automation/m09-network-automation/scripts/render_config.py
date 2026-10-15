@@ -30,6 +30,7 @@ for device_name in change["targets"]["devices"]:
     )
 
     output = Path(f"outputs/{device_name}-candidate.cfg")
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(config + "\n")
 
     print(f"[GENERATED] {output}")
