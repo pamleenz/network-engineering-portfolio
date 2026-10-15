@@ -1,18 +1,16 @@
 ---
-- name: Roll back BGP advertisement change
+# Legacy static example. Scoped to the prefix; never remove the entire BGP process.
+# Only run if the prefix and Null0 route were introduced by this change.
+- name: Roll back example prefix advertisement
   hosts: cisco_routers
   gather_facts: false
-
   tasks:
-    - name: Remove BGP advertisement
+    - name: Remove exact network advertisement only
       cisco.ios.ios_config:
-        parents:
-          - router bgp 65010
+        parents: [router bgp 65010]
         lines:
           - no network 203.0.113.0 mask 255.255.255.0
-          - no neighbor 192.0.2.1 remote-as 65001
-
-    - name: Remove static route
+    - name: Remove exact change-owned Null0 route
       cisco.ios.ios_config:
         lines:
           - no ip route 203.0.113.0 255.255.255.0 Null0
