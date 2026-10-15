@@ -11,6 +11,7 @@
     device: "{{ devices[inventory_hostname] }}"
     prefix: "{{ change.objective.advertise_prefix }}"
     prefix_address: "{{ change.objective.advertise_prefix.split('/')[0] }}"
+    prefix_netmask: "{{ prefix | ansible.utils.ipaddr('netmask') }}"
 
   pre_tasks:
     - name: Validate change intent
@@ -54,4 +55,5 @@
                   activate: true
               networks:
                 - address: "{{ prefix_address }}"
+                  mask: "{{ prefix_netmask }}"
         state: merged
