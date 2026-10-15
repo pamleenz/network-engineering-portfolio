@@ -1,171 +1,100 @@
 # Network Engineering Portfolio
 
-Hands-on network engineering portfolio focused on production-style enterprise, service-provider, security, WAN, data-centre, hybrid-cloud, automation, and managed-services operations.
+Production-style network engineering portfolio covering enterprise LAN/WAN, service-provider routing, security, data-centre networking, hybrid cloud, automation, monitoring and MSP service operations.
 
-The portfolio is structured around engineering validation rather than isolated command exercises. Each module follows a repeatable operational workflow:
+The approach across modules is **Design → Implement (where platforms are available) → Verify → Fault Inject → Troubleshoot → Recover → Document**. The work is intended to support Network Engineer / Senior Network Engineer / Network Security Engineer / Managed Services role preparation, particularly in New Zealand.
 
-**Design → Implement → Verify → Fault Inject → Troubleshoot → Recover → Document**
+> **Evidence policy:** “Completed” describes the learning module, **not** universal hardware validation or production certification. Each module distinguishes hands-on test evidence, reference configurations, vendor/platform limitations, and design-only scenarios. M10’s non-Check-Point vendors and M12’s fictional multi-vendor production incident have **not** been deployed and verified as one live network.
 
-The overall goal is job readiness for Network Engineer, Senior Network Engineer, Network Security Engineer, and MSP / Managed Services roles, with particular relevance to New Zealand enterprise and service-provider environments.
+## Portfolio Index
 
-## Current Portfolio
-
-| Domain | Module | Status | Highlights |
+| Area | Module | Learning status | Evidence / special scope |
 |---|---|---|---|
-| Routing | [Multi-Area OSPF Engineering Lab](routing/ospf/) | Completed | Multi-area OSPF, ABR/ASBR, Totally NSSA, Type 7→5 translation, E1/E2 redistribution, summarization, authentication, passive interfaces, fault injection and recovery |
-| Routing | [Cisco BGP Job-Ready Lab](routing/bgp/) | Completed | eBGP/iBGP, route reflection, best-path selection, prefix filtering, route-maps, communities, maximum-prefix, aggregation, dual-upstream traffic engineering, route-leak protection, RTBH, RIB/CEF troubleshooting and failure recovery |
-| Switching | [Enterprise Switching Job-Ready Lab](switching/enterprise-switching/) | Completed | VLANs, 802.1Q trunks, STP root placement, Root Guard, LACP EtherChannel, SVIs, HSRP, DHCP relay, DHCP Snooping, management services, fault injection and RCA |
-| Security | [Fortinet Enterprise Firewall Job-Ready Lab](firewall/fortinet/) | Completed | Firewall policy, NAT/VIP, security profiles, route-based IKEv2 IPsec, SD-WAN, session/debug-flow troubleshooting, HA design, FortiManager/FortiAnalyzer operations, change and rollback |
-| WAN / Service Provider | [Managed WAN & MPLS Services](wan/managed-wan-mpls/) | Completed | MPLS transport, L3VPN, VRF/RD/RT, MP-BGP VPNv4, PE-CE routing, DIA, BGP transit, BFD, DMVPN Phase 3, Fortinet ADVPN/SD-WAN architecture, incident/RCA workflows |
-| Enterprise Access | [Enterprise Wireless & NAC](enterprise-wireless-nac/) | Completed | 802.1X, PEAP, EAP-TLS, RADIUS, NAC authorization, MAB, CoA/Disconnect, guest segmentation, Cisco ISE / Catalyst 9800 operational mapping, troubleshooting |
-| Data Centre | [VXLAN EVPN / Nexus Operations & Failure Engineering](data-centre/module-07-data-centre-networking/) | Completed | Spine-leaf underlay, BGP EVPN, VXLAN, L2VNI/L3VNI, symmetric IRB, Type-2/3/5 routes, Border Leaf, DCI concepts, MTU/RT failure engineering and NX-OS mapping |
-| Cloud / Hybrid | [M08 - Cloud & Hybrid Networking](cloud-hybrid-networking/) | Completed | Azure hub-spoke, S2S IPsec, BGP, gateway transit, NSG/UDR, Private Endpoint/DNS concepts, AWS VPN/TGW/Direct Connect architecture, hybrid troubleshooting |
-| Automation | [M09 - Automation & Source of Truth](automation/m09-network-automation/) | Completed | Git-based change control, YAML intent, Python validation, Jinja2, Ansible resource modules, Vault, NetBox dynamic inventory, REST API, pre/post-check, rollback and GitHub Actions CI |
-| Operations | [M11 - Managed Services & Observability](operations/m11-managed-services-observability/) | Completed | SNMP, Syslog, NetFlow/IPFIX, NMS, alert triage, service baselines, SLA/SLO thinking, configuration backup, capacity, incident, escalation and RCA workflows |
-| Multi-Vendor | M10 - Multi-Vendor Operations & Migration | Current | Junos operational migration from Cisco, PAN-OS operational model, Check Point management/policy workflow, F5 BIG-IP fundamentals, Arista EOS mapping, cross-vendor troubleshooting and migration |
-| Capstone | M12 - Integrated Managed Services Capstone | Planned | Service acceptance, production change, multi-vendor major incident, vendor/carrier escalation, RCA/PIR, automation/observability integration and final handover |
+| Routing | [M01 — Multi-Area OSPF](routing/ospf/) | Completed | GNS3 / FRR 10.3 hands-on; BFD and some platform behaviours explicitly limited |
+| Routing | [M02 — Cisco BGP](routing/bgp/) | Completed | Multi-AS Cisco routing, route policies, communities, failover, RTBH and fault analysis |
+| Switching | [M03 — Enterprise Switching](switching/enterprise-switching/) | Completed | CML / Cisco IOL L2; VLAN, STP, LACP, HSRP, DHCP relay/snooping and fault analysis |
+| Security | [M04 — Fortinet Enterprise Firewall](firewall/fortinet/) | Completed | FortiGate-VM hands-on for policy/NAT/IPsec/SD-WAN; HA and central management design; eval limitations documented |
+| Managed WAN | [M05/M06 — Managed WAN & MPLS Services](wan/managed-wan-mpls/) | Completed | MPLS L3VPN / PE-CE, transit, BFD, Cisco DMVPN; Fortinet ADVPN limitations marked |
+| Enterprise Access | [Enterprise Wireless & NAC](enterprise-wireless-nac/) | Completed | FreeRADIUS / hostapd / 802.1X, PEAP, EAP-TLS, CoA/MAB; Cisco ISE/C9800 conceptual mapping |
+| Data Centre | [M07 — VXLAN EVPN & Nexus Operations](data-centre/module-07-data-centre-networking/) | Completed | FRR/Linux VXLAN/EVPN tested; NX-OS configuration is reference mapping, not N9Kv validation |
+| Cloud / Hybrid | [M08 — Cloud & Hybrid Networking](cloud-hybrid-networking/) | Completed | Azure hybrid connectivity hands-on; AWS architecture and troubleshooting design |
+| Automation | [M09 — Automation & Source of Truth](automation/m09-network-automation/) | Completed | Ansible, NetBox, BGP change workflow, GitHub Actions; CI validates syntax and intent, not live network deployment |
+| Multi-Vendor | [M10 — Multi-Vendor Operations & Migration](multi-vendor/m10-multi-vendor-operations/) | **Curriculum completed** | Check Point R82 hands-on; Junos, PAN-OS, F5 LTM, Arista EOS **design-based only** |
+| Observability | [M11 — Managed Services & Observability](operations/m11-managed-services-observability/) | Completed | LibreNMS, SNMPv3, traps, Syslog, NTP, NetFlow, alert triage, RCA; module-level lab evidence |
+| Capstone | [M12 — Integrated Enterprise / MSP Capstone](operations/m12-integrated-ms-capstone/) | **Six design stages completed; final individual assessment pending** | Service handover, HLD, change/MOP, simulated incident, RCA/PIR/CAPA; customer is fictional, **no production acceptance** |
 
-## Engineering Approach
-
-The labs are designed to reflect production operations and managed-service workflows, including:
-
-- topology and protocol design
-- explicit implementation and change steps
-- control-plane and data-plane verification
-- deliberate failure injection
-- structured troubleshooting from physical/interface state through routing, policy, sessions, tunnels and application reachability
-- rollback and recovery validation
-- incident-style documentation and root-cause analysis
-- vendor-specific behaviour recorded separately from protocol fundamentals
-- automation, source-of-truth integration, review gates and auditability where appropriate
-- clear separation between hands-on validation, configuration/protocol labs, and design/operations knowledge where licensing or platform limitations prevent faithful emulation
-
-## Platforms and Technologies
-
-The portfolio currently includes hands-on or production-mapped work across:
-
-- Cisco IOS / IOS-XE and NX-OS concepts
-- FRRouting / Linux networking
-- Fortinet FortiGate / FortiManager / FortiAnalyzer concepts
-- Azure and AWS hybrid networking
-- NetBox
-- Ansible
-- Python
-- Jinja2
-- Git / GitHub Actions
-- FreeRADIUS / hostapd / Linux 802.1X components
-
-The remaining roadmap adds Juniper Junos, Palo Alto PAN-OS, Check Point, F5 BIG-IP fundamentals, and concise Arista EOS operational mapping where they add practical multi-vendor value.
+The WAN numbering groups connected provider/WAN work, while Enterprise Wireless/NAC remains an additional standalone study area. The portfolio index reflects actual repository directories rather than implying every section shares a uniform numeric module label.
 
 ## Featured Projects
 
-### M11 - Managed Services & Observability
+### M12 — Integrated MSP Service Handover
 
-A production-style observability module combining LibreNMS, SNMPv3 polling/traps, Syslog, NTP, NetFlow v9, alert lifecycle, noise reduction, SLA measurement caveats and an end-to-end managed-services incident/RCA.
+A six-stage fictional managed-services customer lifecycle: transition and network baseline, multi-vendor architecture review, Check Point → Palo Alto migration **plan**, major incident **simulation**, evidence-based RCA/PIR, and operational handover. Includes runbooks and explicit acceptance blockers. No fictional P1 outage is claimed as a real incident.
 
-→ [Open the M11 observability lab](operations/m11-managed-services-observability/)
+→ [M12 capstone and service handover](operations/m12-integrated-ms-capstone/)
 
-### M09 - Automation & Source of Truth
+### M10 — Multi-Vendor Operations
 
-A production-oriented automation workflow for a controlled BGP prefix advertisement change using NetBox dynamic inventory, Ansible Vault, Cisco resource modules, validation, pre-check/backup/change/post-check/rollback and GitHub Actions CI.
+Hands-on Check Point R82 Standalone: Gaia/SmartConsole object and policy model, Publish/Install, gateway topology synchronisation, management recovery, NAT/traffic log evidence with Cisco IOL. Design-only Junos WAN, PAN-OS zone/NAT/DMZ, F5 LTM, Arista EOS/MLAG/EVPN and cross-vendor automation/rollback comparison.
 
-→ [Open the M09 automation lab](automation/m09-network-automation/)
+→ [M10 technical guide](multi-vendor/m10-multi-vendor-operations/)
 
-### Fortinet Enterprise Firewall Job-Ready Lab
+### M11 — Managed Services & Observability
 
-A production-style enterprise edge firewall lab covering policy, NAT/VIP, route-based IPsec, SD-WAN, session/debug-flow evidence, HA operating model, central management/logging concepts, change control and incident troubleshooting.
+LibreNMS deployment with Cisco telemetry: SNMPv3, traps, Syslog, NTP, NetFlow, monitoring/alert triage, baseline and RCA.
 
-→ [Open the Fortinet firewall lab](firewall/fortinet/)
+→ [M11 monitoring lab](operations/m11-managed-services-observability/)
 
-### Managed WAN & MPLS Services
+### M09 — Network Automation
 
-A WAN-focused engineering module covering MPLS transport/L3VPN, DIA and BGP transit, BFD, DMVPN, SD-WAN/ADVPN architecture, service demarcation, managed-services troubleshooting, carrier escalation and RCA.
+Git-based BGP prefix change automation with source-of-truth data, validation, Cisco resource modules, Ansible Vault, backup/pre/post checks and GitHub Actions syntax/intent verification. CI has **no access to production devices**, so passing it does not prove device configuration or live service success.
 
-→ [Open the managed WAN/MPLS lab](wan/managed-wan-mpls/)
+→ [M09 automation lab](automation/m09-network-automation/)
 
-### Data Centre VXLAN EVPN
+### Firewall, WAN and Data Centre
 
-A spine-leaf EVPN/VXLAN project using FRR/Linux for the validated control/data plane and mapping the operational model to Cisco Nexus / NX-OS.
+- [Fortinet Firewall — NAT, VPN, SD-WAN and troubleshooting](firewall/fortinet/)
+- [Managed WAN/MPLS — L3VPN, DIA/BGP, DMVPN, BFD](wan/managed-wan-mpls/)
+- [Data Centre EVPN/VXLAN — FRR/Linux lab and Nexus mapping](data-centre/module-07-data-centre-networking/)
+- [Cloud/Hybrid — Azure hands-on and AWS reference](cloud-hybrid-networking/)
 
-→ [Open the data-centre lab](data-centre/module-07-data-centre-networking/)
+## Engineering Practices
 
-### Cloud & Hybrid Networking
+The projects prioritize failure-domain isolation, RIB-versus-FIB validation, security/NAT sessions, application and return-path testing, service-level impact, safe management/OOB access, configuration backup, change review, rollback, monitoring, carrier escalation, and evidence-led RCA/PIR. Where constrained by platform or license, scenarios are explicitly labelled **DESIGN / REFERENCE / SIMULATED** instead of portraying hypothetical output as captured evidence.
 
-Hybrid networking work covering Azure hands-on VPN/BGP connectivity and AWS architecture/troubleshooting mapping, with emphasis on routing, security policy, return path and on-prem/cloud fault isolation.
+## Technology Inventory
 
-→ [Open the cloud/hybrid module](cloud-hybrid-networking/)
-
-## Remaining Roadmap
-
-The remaining modules are intentionally focused on operational gaps rather than repeating protocol theory already demonstrated elsewhere in this repository.
-
-### M11 — Managed Services & Observability ✅
-
-Completed production-style observability work covering:
-
-- SNMP polling and traps
-- Syslog and event correlation
-- NetFlow / IPFIX
-- NMS design and alert triage
-- service baselines and capacity
-- SLA / SLO thinking
-- configuration backup and operational hygiene
-- incident, escalation and RCA workflow
-
-### M10 — Multi-Vendor Operations & Migration (Current)
-
-Convert existing Cisco/Fortinet knowledge into practical cross-vendor operational competency:
-
-- Juniper Junos configuration model, routing policy, verification and rollback
-- Palo Alto PAN-OS zones, security/NAT policy, sessions, VPN and candidate/commit workflow
-- Check Point Gaia / Management Server / objects / policy package / publish / install-policy model
-- F5 BIG-IP LTM operational fundamentals
-- concise Arista EOS operational mapping
-- cross-vendor API differences
-- evidence-driven troubleshooting
-- FortiGate → Palo Alto migration workflow
-
-### M12 — Integrated Managed Services Capstone
-
-Reuse the operational environment built in M09–M11 and the multi-vendor skills from M10 in a realistic customer lifecycle:
-
-- service acceptance and baseline
-- planned production change
-- multi-vendor major incident
-- vendor/carrier escalation
-- business validation and rollback decision
-- RCA / PIR
-- monitoring and automation improvement
-- final operational handover
-
-M12 introduces no new protocol syllabus; it is the integration and assessment stage.
+- **Hands-on in specific modules:** Cisco IOL / IOS(-XE), GNS3 FRRouting/Linux, FortiGate-VM under evaluation constraints, Check Point R82 Standalone, FreeRADIUS/hostapd, Azure hybrid infrastructure, LibreNMS, Python/Ansible/NetBox-related workflows.
+- **Vendor mapping / design, not live vendor labs in M10:** Juniper Junos, Palo Alto PAN-OS, F5 BIG-IP LTM, Arista EOS. Cisco Nexus/NX-OS sections in M07 are reference material.
+- **Tooling:** Git/GitHub Actions, YAML/Jinja2, Ansible resource modules and Vault, source-of-truth and monitoring workflows.
 
 ## Repository Structure
 
 ```text
 network-engineering-portfolio/
 ├── README.md
-├── routing/
-│   ├── ospf/
-│   └── bgp/
-├── switching/
-│   └── enterprise-switching/
-├── firewall/
-│   └── fortinet/
-├── wan/
-│   └── managed-wan-mpls/
+├── .github/workflows/
+├── routing/{ospf,bgp}/
+├── switching/enterprise-switching/
+├── firewall/fortinet/
+├── wan/managed-wan-mpls/
 ├── enterprise-wireless-nac/
-├── data-centre/
-│   └── module-07-data-centre-networking/
+├── data-centre/module-07-data-centre-networking/
 ├── cloud-hybrid-networking/
-├── automation/
-│   └── m09-network-automation/
+├── automation/m09-network-automation/
+├── multi-vendor/m10-multi-vendor-operations/
 └── operations/
-    └── m11-managed-services-observability/
+    ├── m11-managed-services-observability/
+    └── m12-integrated-ms-capstone/
 ```
 
-M11 is complete. M10 is now the active module, followed by the M12 integrated capstone.
+## Current Completion and Validation
 
-## Security Note
+- **M01–M11:** Learning exercises documented, with platform-specific evidence and exclusions in each module.
+- **M10:** Completed as mixed-evidence learning; only Check Point R82 in that module has actual vendor VM evidence.
+- **M12:** All six design/ops stages documented; the independent scenario answer and grading are still pending.
+- **Production readiness:** No actual multi-vendor ABS production network was deployed or signed off. The fictional customer's service acceptance stays **pending**.
 
-All credentials, authentication keys, API tokens, pre-shared keys, and environment-specific secrets are excluded or redacted before publication. Example addressing and lab-only routes are used for portfolio documentation.
+## Security and Reuse
+
+This is a public **educational portfolio**. Secrets, credentials, authentication keys, API tokens, private keys, customer data and live configuration backups must not be committed. Some sample material includes legacy protocols or deliberately weakened **lab-only** crypto due to evaluation image constraints; such examples are **not production hardening advice**. Public address examples use RFC documentation ranges; private IPs are lab addressing. Validate commands and vendor functionality against the actual product version before reuse.
