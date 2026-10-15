@@ -1,30 +1,31 @@
 ---
-- name: Verify BGP rollback
+- name: Verify scoped BGP rollback without destroying the BGP service
   hosts: cisco_routers
   gather_facts: false
-
+  vars_files:
+    - ../data/changes/CHG-M09-001.yml
+    - ../data/devices.yml
+  vars:
+    device: "{{ devices[inventory_hostname] }}"
+    prefix: "{{ change.objective.advertise_prefix }}"
+    prefix_address: "{{ prefix.split('/')[0] }}"
+    prefix_netmask: "{{ prefix | ansible.utils.ipaddr('netmask') }}"
   tasks:
-    - name: Verify BGP is no longer active
+    - name: Read current BGP configuration and prefix advertisement
       cisco.ios.ios_command:
         commands:
-          - show ip bgp summary
-        wait_for:
-          - result[0] contains "% BGP not active"
+          - "show running-config | section ^router bgp"
+          - "show ip route static"
+          - "show ip bgp neighbors {{ device.peer_ip }} advertised-routes"
+      register: evidence
+      changed_when: false
 
-    - name: Verify advertised prefix is removed
-      cisco.ios.ios_command:
-        commands:
-          - show ip route 203.0.113.0
-        wait_for:
-          - result[0] contains "% Network not in table"
-
-    - name: Verify BGP configuration is removed
-      cisco.ios.ios_command:
-        commands:
-          - show running-config | section router bgp
-        wait_for:
-          - result[0] not contains "router bgp 65010"
-
-    - name: Rollback verification passed
-      ansible.builtin.debug:
-        msg: "CHG-M09-001 ROLLBACK VERIFIED"
+    - name: Assert change-owned prefix was withdrawn and BGP AS preserved
+      ansible.builtin.assert:
+        that:
+          - "'router bgp ' ~ (device.local_as | string) in evidence.stdout[0]"
+          - "('network ' ~ prefix_address ~ ' mask ' ~ prefix_netmask) not in evidence.stdout[0]"
+          - "('ip route ' ~ prefix_address ~ ' ' ~ prefix_netmask ~ ' Null0') not in evidence.stdout[1]"
+          - "prefix not in evidence.stdout[2]"
+        fail_msg: "Rollback verification failed: review full BGP, static routes, and exact advertised prefix manually."
+        success_msg: "Scoped rollback checks passed; BGP process preserved."
