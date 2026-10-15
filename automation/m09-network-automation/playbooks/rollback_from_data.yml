@@ -18,6 +18,7 @@
       cisco.ios.ios_config:
         parents:
           - "router bgp {{ device.local_as }}"
+          - "address-family ipv4"
         lines:
           - "no network {{ prefix_address }} mask {{ prefix_netmask }}"
       register: rollback_bgp
