@@ -15,7 +15,7 @@
       cisco.ios.ios_command:
         commands:
           - "show running-config | section ^router bgp"
-          - "show ip route static"
+          - "show running-config | include ^ip route"
           - "show ip bgp neighbors {{ device.peer_ip }} advertised-routes"
       register: evidence
       changed_when: false
